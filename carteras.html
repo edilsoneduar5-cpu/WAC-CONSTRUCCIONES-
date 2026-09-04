@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#0C447C">
+<meta name="description" content="SIGA · Bienvenida · DIIPA S.A. de C.V.">
+<title>SIGA · Bienvenida · DIIPA</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --diipa-azul-oscuro: #042C53;
+  --diipa-azul: #0C447C;
+  --diipa-azul-medio: #185FA5;
+  --diipa-azul-claro: #378ADD;
+  --diipa-azul-bg: #E6F1FB;
+  --diipa-teal-oscuro: #04342C;
+  --diipa-teal: #0F6E56;
+  --diipa-teal-medio: #1D9E75;
+  --diipa-teal-claro: #5DCAA5;
+  --diipa-teal-bg: #E1F5EE;
+  --bg-page: #f4f6f9;
+  --bg-card: #ffffff;
+  --bg-tint: #eef1f5;
+  --border: #c8d0db;
+  --border-light: #dde3ea;
+  --text-primary: #042C53;
+  --text-secondary: #4a5a6e;
+  --text-tertiary: #5d6b80;
+  --shadow-sm: 0 1px 3px rgba(4,44,83,.06), 0 1px 2px rgba(4,44,83,.04);
+  --shadow-md: 0 4px 12px rgba(4,44,83,.08);
+  --shadow-lg: 0 10px 24px rgba(4,44,83,.12), 0 4px 8px rgba(4,44,83,.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.app-header {
+  background: linear-gradient(135deg, var(--diipa-azul) 0%, var(--diipa-azul-oscuro) 100%);
+  color: white;
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.app-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.app-logo {
+  width: 44px;
+  height: 44px;
+  background: var(--diipa-teal-claro);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--diipa-teal-oscuro);
+}
+
+.app-header h1 {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.app-header .subtitulo {
+  font-size: 11px;
+  color: #B5D4F4;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  text-align: right;
+}
+
+.user-info .nombre {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.user-info .rol {
+  font-size: 10.5px;
+  color: #B5D4F4;
+  margin-top: 1px;
+}
+
+.btn-logout {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 7px 13px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+
+.welcome-banner {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  border-left: 3px solid var(--diipa-azul);
+}
+
+.welcome-banner h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.welcome-banner p {
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+.welcome-banner .fecha {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--diipa-azul);
+  background: var(--diipa-azul-bg);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+.modules-section {
+  margin-bottom: 26px;
+}
+
+.modules-section h3 {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.modules-grid.compact {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.module-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-decoration: none;
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.module-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent-color);
+}
+
+.module-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-color);
+}
+
+.module-card .icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background: var(--accent-bg);
+  margin-bottom: 12px;
+}
+
+.module-card h4 {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.module-card p {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+.mod-carteras { --accent-color: var(--diipa-teal); --accent-bg: var(--diipa-teal-bg); }
+.mod-comercial { --accent-color: var(--diipa-azul-medio); --accent-bg: var(--diipa-azul-bg); }
+.mod-cliente { --accent-color: var(--diipa-teal-medio); --accent-bg: var(--diipa-teal-bg); }
+.mod-juridico { --accent-color: var(--diipa-azul); --accent-bg: var(--diipa-azul-bg); }
+.mod-contabilidad { --accent-color: #085041; --accent-bg: var(--diipa-teal-bg); }
+.mod-rac { --accent-color: var(--diipa-azul-claro); --accent-bg: var(--diipa-azul-bg); }
+.mod-rh { --accent-color: var(--diipa-teal-medio); --accent-bg: var(--diipa-teal-bg); }
+.mod-dge { --accent-color: var(--diipa-azul-oscuro); --accent-bg: var(--diipa-azul-bg); }
+.mod-config { --accent-color: #5d6b80; --accent-bg: #dde3ea; }
+
+.module-card .icon-symbol {
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-page);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.loader {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--diipa-azul);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-screen p {
+  margin-top: 14px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  border-top: 0.5px solid var(--border);
+  margin-top: 24px;
+  letter-spacing: 0.4px;
+}
+
+@media (max-width: 640px) {
+  .app-header { padding: 12px 16px; }
+  .app-header h1 { font-size: 14px; }
+  .user-info .nombre { font-size: 12px; }
+  .user-info .rol { font-size: 10px; }
+  .main-content { padding: 18px 14px 32px; }
+  .welcome-banner { padding: 14px 16px; }
+  .welcome-banner h2 { font-size: 17px; }
+  .modules-grid, .modules-grid.compact { grid-template-columns: 1fr; gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loader"></div>
+  <p>Verificando sesión...</p>
+</div>
+
+<div id="appContent" style="display:none">
+
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="app-logo">D</div>
+      <div>
+        <h1>SIGA · Sistema Integral de Garantías</h1>
+        <div class="subtitulo">DIIPA S.A. de C.V.</div>
+      </div>
+    </div>
+    <div class="user-box">
+      <div class="user-info">
+        <div class="nombre" id="userName">—</div>
+        <div class="rol" id="userRol">Cargando...</div>
+      </div>
+      <button class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <div class="main-content">
+
+    <div class="welcome-banner">
+      <h2 id="saludoWelcome">Bienvenida</h2>
+      <p>Selecciona el módulo en el que vas a trabajar hoy. Tus cambios se sincronizan automáticamente.</p>
+      <span class="fecha" id="fechaHoy"></span>
+    </div>
+
+    <section class="modules-section">
+      <h3>Operativo principal</h3>
+      <div class="modules-grid">
+
+        <a href="carteras.html" class="module-card mod-carteras">
+          <div class="icon"><span class="icon-symbol">🏦</span></div>
+          <h4>Gestión de Administradoras y Carteras</h4>
+          <p>Revisión · pre-dictámenes URRJ · hitos legales</p>
+        </a>
+
+        <a href="index.html#p18" class="module-card mod-comercial">
+          <div class="icon"><span class="icon-symbol">🏢</span></div>
+          <h4>Comercial</h4>
+          <p>Prospectos · catálogo · marketing</p>
+        </a>
+
+        <a href="index.html" class="module-card mod-cliente">
+          <div class="icon"><span class="icon-symbol">🏆</span></div>
+          <h4>Cliente DIIPA</h4>
+          <p>Expediente · 13 pestañas integradas</p>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="modules-section">
+      <h3>Áreas de apoyo</h3>
+      <div class="modules-grid compact">
+
+        <a href="index.html#p22" class="module-card mod-juridico">
+          <div class="icon"><span class="icon-symbol">⚖️</span></div>
+          <h4>Jurídico</h4>
+          <p>Demandas · litigios · apartados</p>
+        </a>
+
+        <a href="index.html#p21" class="module-card mod-contabilidad">
+          <div class="icon"><span class="icon-symbol">💼</span></div>
+          <h4>Contabilidad</h4>
+          <p>Cobros · CFDI · comisiones</p>
+        </a>
+
+        <a href="index.html#p24" class="module-card mod-rac">
+          <div class="icon"><span class="icon-symbol">🎧</span></div>
+          <h4>RAC · Retención</h4>
+          <p>Motor de Crisis · Cláusula 16ª</p>
+        </a>
+
+        <a href="index.html#p23" class="module-card mod-rh">
+          <div class="icon"><span class="icon-symbol">👥</span></div>
+          <h4>Recursos Humanos</h4>
+          <p>Plantilla · nómina · IMSS</p>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="modules-section">
+      <h3>Dirección y configuración</h3>
+      <div class="modules-grid compact">
+
+        <a href="index.html" class="module-card mod-dge">
+          <div class="icon"><span class="icon-symbol">📊</span></div>
+          <h4>Dashboard DGE</h4>
+          <p>Vista global · KPIs · pendientes</p>
+        </a>
+
+        <a href="index.html#p41" class="module-card mod-config">
+          <div class="icon"><span class="icon-symbol">⚙️</span></div>
+          <h4>Configuración</h4>
+          <p>Usuarios · roles · firmantes</p>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="app-footer">
+    DIIPA S.A. de C.V. · SIGA v4 · Mazatlán, Sinaloa
+  </footer>
+
+</div>
+
+<script>
+const SUPABASE_URL  = 'https://xuaqrzjgkuvfvnttvakr.supabase.co';
+const SUPABASE_KEY  = 'sb_publishable_-2ZZ7pk9pKDoBPXhuLIhEA_ldWsmBri';
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function verificarSesion() {
+  try {
+    const { data: { session }, error } = await sb.auth.getSession();
+    if (error || !session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    mostrarUsuario(session.user);
+    ocultarLoading();
+
+  } catch (err) {
+    console.error('Error al verificar sesión:', err);
+    window.location.href = 'login.html';
+  }
+}
+
+function mostrarUsuario(user) {
+  const email = user.email || 'usuario@diipadesarrollos.com';
+  const nombre = email.split('@')[0].replace(/\./g, ' ').replace(/_/g, ' ');
+  const nombreFormateado = nombre
+    .split(' ')
+    .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+    .join(' ');
+
+  document.getElementById('userName').textContent = nombreFormateado;
+  document.getElementById('userRol').textContent = email;
+
+  const hora = new Date().getHours();
+  let saludo = 'Bienvenida';
+  if (hora < 12) saludo = 'Buenos días';
+  else if (hora < 19) saludo = 'Buenas tardes';
+  else saludo = 'Buenas noches';
+
+  const primerNombre = nombreFormateado.split(' ')[0];
+  document.getElementById('saludoWelcome').textContent = `${saludo}, ${primerNombre}`;
+
+  const fecha = new Date().toLocaleDateString('es-MX', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  document.getElementById('fechaHoy').textContent = fecha;
+}
+
+async function cerrarSesion() {
+  const confirma = confirm('¿Estás segura de cerrar sesión?');
+  if (!confirma) return;
+
+  try {
+    await sb.auth.signOut();
+    window.location.href = 'login.html';
+  } catch (err) {
+    alert('No se pudo cerrar sesión. Intenta de nuevo.');
+  }
+}
+
+function ocultarLoading() {
+  document.getElementById('loadingScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'block';
+}
+
+verificarSesion();
+</script>
+
+</body>
+</html>
